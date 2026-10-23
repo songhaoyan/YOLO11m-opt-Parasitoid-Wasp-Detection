@@ -1,102 +1,172 @@
-# YOLO11m-opt-Parasitoid-Wasp-Detection
 # YOLO11m-opt: Parasitoid Wasp Detection and Identification
 
-This repository provides the implementation and trained model weights of **YOLO11m-opt**, an optimized YOLO11m-based object detection framework developed for automated detection and taxonomic identification of parasitoid wasps from microscopy images.
+This repository provides the source code, trained model weights, and a demonstration dataset for **YOLO11m-opt**, an optimized YOLO11m-based framework for automated detection and taxonomic identification of parasitoid wasps in microscopy images.
 
-The project accompanies the manuscript *“Automated Identification of Parasitoid Wasps for Biological Control Monitoring Using an Optimized Single-Stage Detector.”*
+The repository accompanies our research manuscript on automated parasitoid wasp identification using an optimized single-stage object detector.
 
 ## 1. Model Overview
 
-YOLO11m-opt builds upon the Ultralytics YOLO11m architecture and integrates several modifications designed to improve feature representation and bounding-box localization for small parasitoid wasps:
+YOLO11m-opt is developed based on the Ultralytics YOLO11m architecture and incorporates the following modifications:
 
-- **P2 detection head:** Adds a high-resolution detection branch with a stride of 4.
-- **SPD-Conv:** Incorporates space-to-depth convolution for spatial feature processing.
-- **DySample:** Introduces adaptive feature upsampling.
-- **CBAM:** Applies channel and spatial attention to intermediate features.
-- **WIoUv3:** Employs a dynamically weighted bounding-box regression loss.
+- **P2 detection head:** An additional high-resolution detection branch with a stride of 4 for improved representation of small targets.
+- **SPD-Conv:** Space-to-depth convolution for preserving and processing spatial information.
+- **DySample:** Dynamic feature upsampling.
+- **CBAM:** Convolutional Block Attention Module for channel and spatial attention.
+- **WIoUv3:** Wise-IoU v3 bounding-box regression loss.
 
-The model uses **105 taxonomic output labels**, including 38 terminal biological classes and additional labels representing higher taxonomic ranks. The implementation uses a unified YOLO detection framework rather than a dedicated hierarchical classification head.
+The model uses 105 predefined taxonomic output labels, including 38 terminal biological classes and additional higher-rank taxonomic labels.
 
-## 2. Repository Contents
+These labels are implemented within a unified YOLO detection framework without an explicit hierarchical classification head.
+
+## 2. Repository Structure
 
 ```text
 YOLO11m-opt-Parasitoid-Wasp-Detection/
 ├── README.md
-├── reconstructed_yolo11m.py
+├── requirements.txt
 ├── train.py
+├── reconstructed_yolo11m/
+│   ├── __init__.py
+│   ├── integration.py
+│   ├── modules.py
+│   └── wiou.py
 ├── models/
-│   └── yolo11m_opt.yaml
-└── weights/
-    ├── best.pt
-    └── last.pt
+│   ├── yolo11m_opt.yaml
+│   └── yolo11m_p2.yaml
+├── weight/
+│   ├── best.pt
+│   └── last.pt
+└── demo_dataset
+
+The filenames shown in `demo_dataset/images/` illustrate the intended organization. The actual image filenames may differ.
+
+## 3. Pretrained Model Weights
+
+Two trained YOLO11m-opt model checkpoints are provided:
+
+| File | Description |
+|---|---|
+| `weight/best.pt` | Model checkpoint selected according to validation performance; recommended for inference |
+| `weight/last.pt` | Checkpoint saved at the end of training |
+
+The checkpoints correspond to the optimized YOLO11m architecture with 105 taxonomic output labels.
+
+Loading these checkpoints may require the custom modules provided in `reconstructed_yolo11m/`.
+
+## 4. Demonstration Dataset
+
+A small demonstration dataset is provided to allow users to explore the model and perform example predictions.
+
+The demonstration dataset contains **38 microscopy images**, with **one image randomly selected from each of the 38 terminal biological classes** represented in the study.
+
+The images are intended for:
+
+- Testing model loading and inference.
+- Visualizing predicted bounding boxes and taxonomic labels.
+- Exploring the model's behavior on representative parasitoid wasp specimens.
+- Demonstrating the basic workflow of automated parasitoid wasp identification.
+
+### Important Notes
+
+The demonstration dataset is a small sample of the research dataset and is provided solely for demonstration and trial use.
+
+**It is not an independent external test dataset and must not be treated as a benchmark for reproducing the performance metrics reported in the manuscript.**
+
+Because only one image per biological class is included, the demonstration dataset cannot adequately characterize within-class variation, model robustness, or generalization performance.
+
+The images were randomly selected rather than selected on the basis of model prediction performance.
+
+## 5. Full Dataset Availability
+
+The complete microscopy dataset used for model development and evaluation is not publicly released because of research data access restrictions.
+
+Instead, this repository provides a limited demonstration subset containing one randomly selected image from each terminal biological class.
+
+The released demonstration subset is not sufficient to reproduce the complete training process, the experimental comparisons, or the quantitative results reported in the manuscript.
+
+Requests for additional research data may be directed to the corresponding author and will be considered subject to applicable access restrictions.
+
+## 6. Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/<YOUR_USERNAME>/YOLO11m-opt-Parasitoid-Wasp-Detection.git
+cd YOLO11m-opt-Parasitoid-Wasp-Detection
 ```
 
-**Model weights**
+Install the Python dependencies:
 
-- `best.pt`: Model checkpoint selected according to validation performance.
-- `last.pt`: Model checkpoint saved at the final training epoch.
+```bash
+python -m pip install -r requirements.txt
+```
 
-Both files correspond to the YOLO11m-opt architecture. For standard inference and evaluation, `best.pt` is recommended.
+The framework is implemented using PyTorch and Ultralytics. Users should ensure that their PyTorch and CUDA installations are compatible with their operating system and hardware.
 
-## 3. Training Configuration
+## 7. Example Inference
 
-The optimized model was configured using the following settings:
+The following example demonstrates how to load the trained checkpoint and perform inference using one of the demonstration images.
 
-| Parameter | Value |
+```python
+from ultralytics import YOLO
+from reconstructed_yolo11m import register_model_modules
+
+register_model_modules()
+
+model = YOLO("weight/best.pt", task="detect")
+
+results = model.predict(
+    source="demo_dataset/images",
+    imgsz=960,
+    conf=0.25,
+    save=True
+)
+```
+
+Predictions are generated using the 105-label output space defined during training.
+
+The code assumes that the custom modules can be successfully registered using the implementation supplied in this repository.
+
+## 8. Training Configuration
+
+| Parameter | Configuration |
 |---|---|
-| Base architecture | YOLO11m |
-| Number of output labels | 105 |
-| Input image size | 960 × 960 |
+| Model | YOLO11m-opt |
+| Taxonomic output labels | 105 |
+| Terminal biological classes | 38 |
+| Input resolution | 960 × 960 |
 | Maximum training epochs | 400 |
 | Optimizer | SGD |
 | Random seed | 42 |
+| Detection scales | P2, P3, P4, P5 |
 | Bounding-box regression loss | WIoUv3 |
-| Detection branches | P2, P3, P4, P5 |
 
-Detailed software versions, computational environment information, augmentation parameters, and training hyperparameters are documented in Supplementary Table S2 of the accompanying manuscript.
+Detailed computational environment information, software versions, data augmentation settings, and training hyperparameters are documented in Supplementary Table S2 of the accompanying manuscript.
 
-## 4. Model Implementation
+The training script is provided for transparency and methodological inspection. Reproducing the original training results requires access to the full research dataset and its corresponding annotations.
 
-The custom implementations of SPD-Conv, DySample, CBAM, and WIoUv3 are provided in `reconstructed_yolo11m.py`.
+## 9. Intended Use and Limitations
 
-The modified detection architecture is defined in `models/yolo11m_opt.yaml`.
+YOLO11m-opt is intended for research applications involving parasitoid wasp detection, preliminary specimen screening, and computer-assisted taxonomic identification.
 
-The training procedure is provided in `train.py`.
+The model operates within a predefined set of taxonomic labels and does not explicitly identify previously unseen taxa.
 
-The model depends on Ultralytics YOLO and PyTorch. Custom modules must be registered before loading model checkpoints when required by the implementation.
+Its robustness across different illumination conditions, microscope configurations, geographic regions, and unseen species has not been comprehensively established.
 
-## 5. Dataset and Taxonomic Labels
+Model predictions should not be considered a substitute for verification by qualified taxonomic experts.
 
-The dataset comprises microscopy images of parasitoid wasps representing 38 terminal biological classes.
+## 10. Citation
 
-Each specimen may have annotations corresponding to multiple taxonomic ranks within the predefined 105-label space.
+If you use this repository or its pretrained model weights, please cite the accompanying research article.
 
-The model is designed for the taxa represented during training. It does not include an explicit open-set recognition mechanism, and predictions for previously unseen taxa should be interpreted cautiously.
+The full citation and DOI will be added following publication.
 
-The complete research dataset is not included in this repository. Dataset availability and access restrictions are described in the accompanying manuscript.
+## 11. Acknowledgments
 
-## 6. Intended Use and Limitations
+This work builds upon the Ultralytics YOLO framework and incorporates existing methodological components, including SPD-Conv, DySample, CBAM, and Wise-IoU.
 
-YOLO11m-opt was developed as a research tool for parasitoid wasp detection, preliminary specimen screening, and computer-assisted taxonomic identification.
+Please refer to the accompanying manuscript for the original references and methodological details.
 
-Performance under substantially different illumination conditions, microscopy equipment, geographic locations, and previously unseen taxa has not been comprehensively established.
+## 12. License
 
-Model predictions should be verified by qualified taxonomic experts when used for scientific identification.
-
-## 7. Citation
-
-If you use this implementation or its trained weights, please cite the accompanying manuscript:
-
-*Automated Identification of Parasitoid Wasps for Biological Control Monitoring Using an Optimized Single-Stage Detector.*
-
-Full publication details and DOI will be added when available.
-
-## 8. Acknowledgments
-
-This project is based on the Ultralytics YOLO framework. SPD-Conv, DySample, CBAM, and Wise-IoU are existing methods integrated and adapted for the present detection task.
-
-Please refer to the accompanying manuscript for the relevant original references.
-
-## 9. License
-
-Licensing information will be provided after verification of the applicable third-party software licenses and redistribution requirements.
+The applicable licensing terms for the source code, trained weights, and demonstration images will be clarified in accordance with the relevant third-party software licenses and research data access conditions.
