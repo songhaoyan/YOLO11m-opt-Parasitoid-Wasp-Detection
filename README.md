@@ -20,69 +20,103 @@ These labels are implemented within a unified YOLO detection framework without a
 
 ## 2. Repository Structure
 
+The GitHub repository contains the source code, model configuration files, and dependency information.
+
 ```text
 YOLO11m-opt-Parasitoid-Wasp-Detection/
 ├── README.md
 ├── requirements.txt
 ├── train.py
+├── train_rebuilt.py
 ├── reconstructed_yolo11m/
 │   ├── __init__.py
 │   ├── integration.py
 │   ├── modules.py
 │   └── wiou.py
+└── models/
+    ├── yolo11m_opt.yaml
+    └── yolo11m_p2.yaml
+```
+
+The pretrained model weights and demonstration dataset are distributed separately through GitHub Releases.
+
+After downloading and extracting these resources, the local project directory can be organized as follows:
+
+```text
+YOLO11m-opt-Parasitoid-Wasp-Detection/
+├── README.md
+├── requirements.txt
+├── train.py
+├── train_rebuilt.py
+├── reconstructed_yolo11m/
 ├── models/
-│   ├── yolo11m_opt.yaml
-│   └── yolo11m_p2.yaml
-├── weight/
+├── weights/
 │   ├── best.pt
 │   └── last.pt
-└── demo_dataset
-
-The filenames shown in `demo_dataset/images/` illustrate the intended organization. The actual image filenames may differ.
+└── demo_dataset/
+    └── images/
+        └── [38 demonstration images]
+```
 
 ## 3. Pretrained Model Weights
 
-Two trained YOLO11m-opt model checkpoints are provided:
+Two trained YOLO11m-opt model checkpoints are available through GitHub Releases.
 
-| File | Description |
+**[Download Pretrained Model Weights](https://github.com/songhaoyan/YOLO11m-opt-Parasitoid-Wasp-Detection/releases/tag/weights)**
+
+| Checkpoint | Description |
 |---|---|
-| `weight/best.pt` | Model checkpoint selected according to validation performance; recommended for inference |
-| `weight/last.pt` | Checkpoint saved at the end of training |
+| `best.pt` | Model checkpoint selected according to validation performance; recommended for inference |
+| `last.pt` | Model checkpoint saved at the end of training |
 
-The checkpoints correspond to the optimized YOLO11m architecture with 105 taxonomic output labels.
+Both checkpoints correspond to the optimized YOLO11m architecture with 105 predefined taxonomic output labels.
 
-Loading these checkpoints may require the custom modules provided in `reconstructed_yolo11m/`.
+To use the pretrained model:
+
+1. Open the model weights release using the link above.
+2. Download `best.pt` and, optionally, `last.pt` from the release assets.
+3. Create a folder named `weights` in the repository root.
+4. Place the downloaded checkpoint files inside this folder.
+
+Loading the checkpoints requires the corresponding custom modules provided in `reconstructed_yolo11m/`.
 
 ## 4. Demonstration Dataset
 
-A small demonstration dataset is provided to allow users to explore the model and perform example predictions.
+A demonstration dataset containing **38 microscopy images**, with **one image randomly selected from each of the 38 terminal biological classes**, is provided for trial use.
 
-The demonstration dataset contains **38 microscopy images**, with **one image randomly selected from each of the 38 terminal biological classes** represented in the study.
+**[Download Demonstration Dataset](https://github.com/songhaoyan/YOLO11m-opt-Parasitoid-Wasp-Detection/releases/tag/demo_dataset)**
 
-The images are intended for:
+The demonstration images are distributed as `demo_dataset.zip` through GitHub Releases.
 
-- Testing model loading and inference.
-- Visualizing predicted bounding boxes and taxonomic labels.
-- Exploring the model's behavior on representative parasitoid wasp specimens.
-- Demonstrating the basic workflow of automated parasitoid wasp identification.
+To prepare the dataset:
+
+1. Download `demo_dataset.zip` from the release assets.
+2. Extract the ZIP archive.
+3. Place the extracted images in a local `demo_dataset/images/` directory.
+
+The demonstration dataset is intended for model loading, inference, visualization of predicted bounding boxes, and exploration of the model's predictions.
 
 ### Important Notes
 
-The demonstration dataset is a small sample of the research dataset and is provided solely for demonstration and trial use.
+The demonstration dataset is provided exclusively for demonstration and trial use.
 
-**It is not an independent external test dataset and must not be treated as a benchmark for reproducing the performance metrics reported in the manuscript.**
+Ground-truth annotation files are not included.
 
-Because only one image per biological class is included, the demonstration dataset cannot adequately characterize within-class variation, model robustness, or generalization performance.
+**The demonstration dataset is not an independent external test dataset and must not be used as a benchmark for reproducing the quantitative performance metrics reported in the manuscript.**
 
-The images were randomly selected rather than selected on the basis of model prediction performance.
+Because only one image per biological class is provided, the demonstration dataset cannot adequately characterize within-class variation, model robustness, or generalization performance.
+
+The demonstration images were randomly selected rather than selected according to prediction performance.
 
 ## 5. Full Dataset Availability
 
-The complete microscopy dataset used for model development and evaluation is not publicly released because of research data access restrictions.
+The complete microscopy dataset used for model development and evaluation is not publicly released due to research data access restrictions.
 
-Instead, this repository provides a limited demonstration subset containing one randomly selected image from each terminal biological class.
+Instead, a limited demonstration subset containing one image from each of the 38 terminal biological classes is made available through GitHub Releases.
 
-The released demonstration subset is not sufficient to reproduce the complete training process, the experimental comparisons, or the quantitative results reported in the manuscript.
+The complete research dataset, original annotations, and training, validation, and test partitions are not included.
+
+Consequently, the released materials do not enable full reproduction of the original training experiments, experimental comparisons, or reported quantitative evaluation results.
 
 Requests for additional research data may be directed to the corresponding author and will be considered subject to applicable access restrictions.
 
@@ -91,7 +125,7 @@ Requests for additional research data may be directed to the corresponding autho
 Clone the repository:
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/YOLO11m-opt-Parasitoid-Wasp-Detection.git
+git clone https://github.com/songhaoyan/YOLO11m-opt-Parasitoid-Wasp-Detection.git
 cd YOLO11m-opt-Parasitoid-Wasp-Detection
 ```
 
@@ -103,9 +137,11 @@ python -m pip install -r requirements.txt
 
 The framework is implemented using PyTorch and Ultralytics. Users should ensure that their PyTorch and CUDA installations are compatible with their operating system and hardware.
 
+Download the pretrained weights and demonstration images from the release links provided in Sections 3 and 4 before running inference.
+
 ## 7. Example Inference
 
-The following example demonstrates how to load the trained checkpoint and perform inference using one of the demonstration images.
+After downloading `best.pt` and extracting the demonstration images into the directories described above, run the following Python code:
 
 ```python
 from ultralytics import YOLO
@@ -113,7 +149,7 @@ from reconstructed_yolo11m import register_model_modules
 
 register_model_modules()
 
-model = YOLO("weight/best.pt", task="detect")
+model = YOLO("weights/best.pt", task="detect")
 
 results = model.predict(
     source="demo_dataset/images",
@@ -123,9 +159,9 @@ results = model.predict(
 )
 ```
 
-Predictions are generated using the 105-label output space defined during training.
+The model generates predictions within the predefined 105-label taxonomic output space.
 
-The code assumes that the custom modules can be successfully registered using the implementation supplied in this repository.
+The custom model modules must be registered before loading the checkpoint. The inference example assumes that the required dependencies have been installed and that the downloaded weights and images are located in the specified directories.
 
 ## 8. Training Configuration
 
@@ -143,7 +179,9 @@ The code assumes that the custom modules can be successfully registered using th
 
 Detailed computational environment information, software versions, data augmentation settings, and training hyperparameters are documented in Supplementary Table S2 of the accompanying manuscript.
 
-The training script is provided for transparency and methodological inspection. Reproducing the original training results requires access to the full research dataset and its corresponding annotations.
+The training scripts are provided for methodological transparency. Dataset paths must be configured by users who have access to an appropriately annotated dataset.
+
+Because the complete research dataset and its annotations are not publicly available, the original training and quantitative evaluation results cannot be fully reproduced using only the materials in this repository.
 
 ## 9. Intended Use and Limitations
 
@@ -151,13 +189,13 @@ YOLO11m-opt is intended for research applications involving parasitoid wasp dete
 
 The model operates within a predefined set of taxonomic labels and does not explicitly identify previously unseen taxa.
 
-Its robustness across different illumination conditions, microscope configurations, geographic regions, and unseen species has not been comprehensively established.
+Its robustness across different illumination conditions, microscope configurations, geographic regions, and unseen taxa has not been comprehensively established.
 
 Model predictions should not be considered a substitute for verification by qualified taxonomic experts.
 
 ## 10. Citation
 
-If you use this repository or its pretrained model weights, please cite the accompanying research article.
+If you use this repository, its source code, or its pretrained model weights, please cite the accompanying research article.
 
 The full citation and DOI will be added following publication.
 
@@ -165,7 +203,7 @@ The full citation and DOI will be added following publication.
 
 This work builds upon the Ultralytics YOLO framework and incorporates existing methodological components, including SPD-Conv, DySample, CBAM, and Wise-IoU.
 
-Please refer to the accompanying manuscript for the original references and methodological details.
+Please refer to the accompanying manuscript for the relevant original references and methodological details.
 
 ## 12. License
 
