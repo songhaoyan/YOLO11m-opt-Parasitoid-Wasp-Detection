@@ -171,7 +171,7 @@ The custom model modules must be registered before loading the checkpoint. The i
 | Taxonomic output labels | 105 |
 | Terminal biological classes | 38 |
 | Input resolution | 960 × 960 |
-| Maximum training epochs | 300 |
+| Maximum training epochs | 400 |
 | Optimizer | SGD |
 | Random seed | 42 |
 | Detection scales | P2, P3, P4, P5 |
