@@ -54,8 +54,8 @@ YOLO11m-opt-Parasitoid-Wasp-Detection/
 │   ├── best.pt
 │   └── last.pt
 └── demo_dataset/
-    └── images/
-        └── [38 demonstration images]
+    ├── images/          # 38 representative microscopy images
+    └── annotations/     # Corresponding annotation files
 ```
 
 ## 3. Pretrained Model Weights
@@ -82,39 +82,43 @@ Loading the checkpoints requires the corresponding custom modules provided in `r
 
 ## 4. Demonstration Dataset
 
-A demonstration dataset containing **38 microscopy images**, with **one image randomly selected from each of the 38 terminal biological classes**, is provided for trial use.
+A demonstration dataset containing **38 representative parasitoid wasp microscopy images**, with one image corresponding to each of the 38 terminal biological classes, is publicly available together with their corresponding annotation files.
 
-**[Download Demonstration Dataset](https://github.com/songhaoyan/YOLO11m-opt-Parasitoid-Wasp-Detection/releases/tag/demo_dataset)**
+**[Download Demonstration Dataset and Annotations](https://github.com/songhaoyan/YOLO11m-opt-Parasitoid-Wasp-Detection/releases/tag/demo_dataset)**
 
-The demonstration images are distributed as `demo_dataset.zip` through GitHub Releases.
+The demonstration dataset is distributed as `demo_dataset.rar` through GitHub Releases.
 
-To prepare the dataset:
+The released materials include:
 
-1. Download `demo_dataset.zip` from the release assets.
-2. Extract the ZIP archive.
-3. Place the extracted images in a local `demo_dataset/images/` directory.
+- **38 representative microscopy images:** One image corresponding to each terminal biological class.
+- **YOLO TXT annotation files:** Corresponding class IDs and normalized bounding-box coordinates.
+- **Pascal VOC XML annotation files:** Corresponding bounding-box annotations in XML format.
 
-The demonstration dataset is intended for model loading, inference, visualization of predicted bounding boxes, and exploration of the model's predictions.
+The annotations follow the hierarchical taxonomic labeling scheme used in this study, comprising 105 detection labels, including 38 terminal biological classes and 67 additional higher-rank taxonomic labels.
+
+Each specimen may be associated with multiple highly overlapping bounding boxes representing different taxonomic levels. These annotations illustrate the multilabel structure used in the proposed detection framework.
+
+### Preparation
+
+1. Download `demo_dataset.rar` from the release page.
+2. Extract the archive using a compatible extraction tool.
+3. Examine the microscopy images and their corresponding annotation files.
+4. To run the inference example in Section 7, specify the extracted image directory as the input source.
 
 ### Important Notes
 
-The demonstration dataset is provided exclusively for demonstration and trial use.
+The demonstration dataset is provided to illustrate the image characteristics, annotation structure, and inference workflow of the proposed YOLO11m-opt framework.
 
-Ground-truth annotation files are not included.
+**This demonstration dataset is not the independent external test set used in the manuscript and should not be used to reproduce the reported quantitative performance metrics.**
 
-**The demonstration dataset is not an independent external test dataset and must not be used as a benchmark for reproducing the quantitative performance metrics reported in the manuscript.**
-
-Because only one image per biological class is provided, the demonstration dataset cannot adequately characterize within-class variation, model robustness, or generalization performance.
-
-The demonstration images were randomly selected rather than selected according to prediction performance.
-
+Because only one representative image per terminal biological class is included, the demonstration dataset is not sufficient for evaluating within-class variation, model robustness, or generalization performance.
 ## 5. Full Dataset Availability
 
 The complete microscopy dataset used for model development and evaluation is not publicly released due to research data access restrictions.
 
-Instead, a limited demonstration subset containing one image from each of the 38 terminal biological classes is made available through GitHub Releases.
+A representative subset containing 38 microscopy images and their corresponding annotation files is publicly available through GitHub Releases. The released annotations are provided to illustrate the hierarchical labeling scheme and annotation formats used in this study.
 
-The complete research dataset, original annotations, and training, validation, and test partitions are not included.
+The complete research dataset, full annotation collection, and original training, validation, and independent test partitions are not publicly available. Therefore, the demonstration dataset does not enable full reproduction of the original training experiments or quantitative evaluation results.
 
 Consequently, the released materials do not enable full reproduction of the original training experiments, experimental comparisons, or reported quantitative evaluation results.
 
@@ -137,11 +141,11 @@ python -m pip install -r requirements.txt
 
 The framework is implemented using PyTorch and Ultralytics. Users should ensure that their PyTorch and CUDA installations are compatible with their operating system and hardware.
 
-Download the pretrained weights and demonstration images from the release links provided in Sections 3 and 4 before running inference.
+Download the pretrained weights and the demonstration dataset with its corresponding annotations from the release links provided in Sections 3 and 4 before running inference.
 
 ## 7. Example Inference
 
-After downloading `best.pt` and extracting the demonstration images into the directories described above, run the following Python code:
+After downloading best.pt and extracting the demonstration dataset, specify the image directory as the inference input and run the following Python code:
 
 ```python
 from ultralytics import YOLO
