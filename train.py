@@ -4,7 +4,7 @@ from __future__ import annotations
 
                                     
 DATA_YAML = r""
-MODEL_TAG = "YOLO11m_OPT_105_960_Trial8_train_then_external"
+MODEL_TAG = ""
 OPT_MODEL = True
 EPOCHS = 300
 IMGSZ = 960
@@ -14,7 +14,6 @@ WORKERS = 0
 SEED = 42
 AMP = True
 SAVE_PERIOD = 25
-OPTIMIZER = "SGD"
 USE_PRETRAINED = False  
 USE_WIOU = True 
 EVALUATE_TEST_AFTER_TRAINING = False                       
