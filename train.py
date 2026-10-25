@@ -35,12 +35,7 @@ CM_CONF = 0.25
 NMS_IOU = 0.70
 MATCH_IOU = 0.50
 TRIAL8_BEST_HYP = {
-    "lr0": 0.0184447, "lrf": 0.1620807,
-    "momentum": 0.8710642, "weight_decay": 0.0001,
-    "warmup_epochs": 3.6216454, "hsv_h": 0.0,
-    "hsv_s": 0.5339505, "hsv_v": 0.2780041,
-    "translate": 0.1706818, "scale": 0.4860711,
-    "fliplr": 0.3069651,
+
 }
 
 import csv
