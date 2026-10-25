@@ -6,7 +6,7 @@ from __future__ import annotations
 DATA_YAML = r""
 MODEL_TAG = "YOLO11m_OPT_105_960_Trial8_train_then_external"
 OPT_MODEL = True
-EPOCHS = 400
+EPOCHS = 300
 IMGSZ = 960
 BATCH = 10
 DEVICE = "0"
