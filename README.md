@@ -50,7 +50,6 @@ After downloading and extracting these resources, the local project directory ca
 YOLO11m-opt-Parasitoid-Wasp-Detection/
 ├── README.md
 ├── requirements.txt
-├── train.py
 ├── train_rebuilt.py
 ├── reconstructed_yolo11m/
 ├── models/
