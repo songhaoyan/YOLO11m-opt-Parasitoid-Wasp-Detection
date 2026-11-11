@@ -1,5 +1,9 @@
 # YOLO11m-opt: Parasitoid Wasp Detection and Identification
-
+**Software Version:** v1.0.0  
+**Release Type:** Initial research release  
+**Framework:** Ultralytics YOLO11m  
+**Project:** YOLO11m-opt Parasitoid Wasp Detection and Identification
+**Official Release:** https://github.com/songhaoyan/YOLO11m-opt-Parasitoid-Wasp-Detection/releases/tag/v1.0.0
 This repository provides the source code, trained model weights, and a demonstration dataset for **YOLO11m-opt**, an optimized YOLO11m-based framework for automated detection and taxonomic identification of parasitoid wasps in microscopy images.
 
 The repository accompanies our research manuscript on automated parasitoid wasp identification using an optimized single-stage object detector.
